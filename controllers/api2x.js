@@ -1,22 +1,30 @@
-var express = require('express');
+/// CRUD GENERAL
+let express = require('express');
+let managerFilter = require('../utilitarios/filters')
 
 module.exports = (function() {
 
 	var router = express.Router();
 	var Sequelize = require('sequelize');
-	var config = require('./config');
+	var config = require('../config');
 
 	//Initialize database
-	var sequelize = new Sequelize(config.database, config.username, config.password);
+	var sequelize = new Sequelize(config.database, config.username, config.password, config.sequelizeOption);
+
 	var TABLE_PREFIX = config.table_prefix;
 
-	//Pagination settings
+	// //Pagination settings
 	var paginate = config.paginate;
 	var page_limit = config.page_limit;
 
 	var mysql_clean = function (string) {
 		return sequelize.getQueryInterface().escape(string);
 	};
+
+	//comprbacion de inicio
+	router.get('/', function (req, res) {
+		return res.send({ error: true, message: 'hello desde LA API GENERAL version 1' })
+	});
 
 	//Create 
 	router.post('/:table', function(req, res) {
@@ -102,8 +110,8 @@ module.exports = (function() {
 		});
 	});
 
-	//Read 
-	router.get('/:table', function(req, res) {
+	//Read // GETALL
+	router.get('/:table/getall', function(req, res) {
 		if(paginate) {
 			var page = 1;
 			if(req.query.page)
@@ -192,6 +200,111 @@ module.exports = (function() {
 				"message" : err.message
 			});
 		});
+	});
+
+	//Read by filter
+	router.get('/:table/getall/filterBy/:filter', function(req, res) {
+		//filtros		
+		let filtros = managerFilter.getFilters(req.params.filter);
+
+		sequelize.query("SELECT * FROM `"+TABLE_PREFIX+req.params.table+"` WHERE "+ filtros, { type: sequelize.QueryTypes.SELECT})
+		.then(function(rows) {
+			if(!rows.length) {
+				res.status(404);
+				res.json({
+					"success" : 0,
+					"data" : "No rows found"
+				});
+			}
+			res.status(200);
+			res.json({
+				"success" : 1,
+				"data" : rows
+			});
+		})
+		.catch( function(err) {
+			res.status(404);
+			res.send({
+				"success" : 0,
+				"message" : err.message
+			});
+		});		
+	});
+
+	//PAGINATION + FILTER
+	router.get('/:table/paginacion/filterBy/:filter', function(req, res) {
+		//filtros		
+		let filtros = managerFilter.getFilters(req.params.filter);
+		
+		//cuneta el total de filas TotalCount
+		sequelize.query("SELECT count(*) as TotalCount FROM `"+TABLE_PREFIX+req.params.table+"` WHERE "+ filtros, { type: sequelize.QueryTypes.SELECT})
+		.then(function(rows) {
+
+			// cocinar la paginacion
+			// total de registros
+			const TotalCount= rows[0].TotalCount;
+
+			//orden
+			const orden = req.query.orden ? managerFilter.getOrder(req.query.orden, req.query.ordendireccion) : '';
+
+			const page_rows = req.query.rows || page_limit;
+			const page = req.query.pagenumber ? req.query.pagenumber : Number(0);
+			const offset = (page-1) * page_rows;
+
+			//Calculate pages
+			const next = Number(page)+1;
+			// const previous = page === 0 ? page : Number(page)-1;		
+
+			const read_query = "SELECT * FROM `" + ( TABLE_PREFIX + req.params.table ) + "` WHERE "+ filtros + orden + " LIMIT "+page_rows+" OFFSET "+offset;
+						
+			// paginacion
+			sequelize.query(read_query, { type: sequelize.QueryTypes.SELECT})
+			.then(function(rows) {
+				if(!rows.length) {
+					res.status(404);
+					res.json({
+						"success" : 0,
+						"data" : []
+					});
+				}
+				res.status(200);
+				if(!next)
+					res.json({
+						"success" : 1,
+						"data" : rows
+					});
+				else
+					var last = Math.ceil(TotalCount/page_rows);
+					res.json({
+					"success" : 1,
+					"data" : rows,
+					"pages" : {
+						"next": next > last ? last : next,
+						// "previous": previous,
+						"page": Number(page),
+						"last": last,
+						"totalCount": TotalCount
+					}
+				});
+			})
+			.catch( function(err) {
+				res.status(404);				
+				res.send({
+					"success" : 0,
+					"message" : err.message
+				});
+
+				
+			});
+
+
+		}).catch( function(err) {
+			res.status(404);
+			res.send({
+				"success" : 0,
+				"message" : err.message
+			});
+		});			
 	});
 
 	//Delete by ID 

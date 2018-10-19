@@ -1,24 +1,27 @@
 let express = require("express"); 
-var appa = express();
-// var router = require('express').Router();
+const router = express.Router();
 
-let inicioControler = require('../controllers/inicio');
-// appa.use('/inicio', inicioControler);
+const api2 = require('../controllers/api2');
 
-let APIRoutes = () => {
-    appa.use('/inicio', inicioControler);
-    return appa;
-}
+router.get('/', function(req, res, next) {
+    res.json({status:"success", message:"Parcel Pending API", data:{"version_number":"v1.0.0"}})    
+});
 
-// let APIRoutes = () => {
-//     router.get('/inicio', inicioControler)
+// router.use('/inicio',inicioControler);
+// router.use('/api',apiGeneral);
 
-//     return router;
-// }
+// router.use('/api2',api2.init);
 
-// app.get('/', function (req, res) {
-//     return res.send({ error: true, message: 'hello desde version 1' })
-// });
+router.post('/api/:table/create',api2.create);
+router.get('/api/:table/getall',api2.getAll);
+router.put('/api/:table/update/:id',api2.update);
+router.delete('/api/:table/remove/:id',api2.remove);
+router.put('/api/:table/removeLogic/:id',api2.removelogic);
+
+router.get('/api/:table/getById/:id',api2.getById);
+router.get('/api/:table/getall/getFilterBy/:filter',api2.getFilterBy);
+router.get('/api/:table/getpagination/getFilterBy/:filter',api2.getPagination);
 
 
-module.exports = APIRoutes;
+
+module.exports = router;

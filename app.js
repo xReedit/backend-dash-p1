@@ -1,7 +1,8 @@
 var express = require("express"); 
-var app = express();
 var bodyParser = require('body-parser');
 var cors=require('cors');
+
+var app = express();
 
 app.use(cors());
 app.use(bodyParser.json()); // soporte para bodies codificados en jsonsupport
@@ -16,8 +17,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // soporte para bodies codif
 //     next();
 // });
 
-
 var appV1 = require('./routes/v1');
+
 
 
 app.use('/v1',appV1);
@@ -40,11 +41,11 @@ app.use(function(err, req, res, next) {
         status: 0,
         data: err.message
     });
+    res.render('error');
 });
 
-var server = app.listen(8080, function () {
+var server = app.listen(3000, function () {
     console.log('Server is running..'); 
 });
-
 
 module.exports = app;

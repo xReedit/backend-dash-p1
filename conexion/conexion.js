@@ -1,9 +1,9 @@
 let mysql = require('mysql');
 const OPCIONES_CNX = {
     host: 'localhost',
-    user: 'adminpime',
-    password: 'AdminMipe123',
-    database: 'webmipe',
+    user: 'adminTransactor',
+    password: '159159159',
+    database: 'transactor',
     multipleStatements: true, // acepta multimples consultas
 };
 
