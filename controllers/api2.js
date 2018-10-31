@@ -7,10 +7,6 @@ let managerFilter = require('../utilitarios/filters')
 let sequelize = new Sequelize(config.database, config.username, config.password, config.sequelizeOption);
 let TABLE_PREFIX = config.table_prefix;
 
-// // //Pagination settings
-// let paginate = config.paginate;
-// let page_limit = config.page_limit;
-
 let mysql_clean = function (string) {
     return sequelize.getQueryInterface().escape(string);
 };
@@ -24,11 +20,15 @@ const create = async function(req, res){
     if(JSON.stringify(req.body) == '{}') {        
         return ReE(res, 'Faltan parametros')                
     }
-
+    
     let keys = '';
-	let values = '';
+	let values = '';	
 	Object.keys(req.body).forEach(function(key, index) {
 		let val = req.body[key];
+
+		// info token
+		val = managerFilter.getInfoToken(req, val) || val;
+		
 		keys += "`"+key+"`";
 		values += mysql_clean(val);
 		if(Object.keys(req.body).length != (index+1)) {
@@ -81,7 +81,7 @@ const getAll = async function(req, res){
     let read_query = "SELECT * FROM `" + ( TABLE_PREFIX + req.params.table ) + "` "+orden;
     sequelize.query(read_query, { type: sequelize.QueryTypes.SELECT})
 		.then(function(rows) {
-            return ReS(res, {data:rows});
+			return ReS(res, {data:rows});			
 		})
 		.catch((err)=> {return ReE(res, err);});
         

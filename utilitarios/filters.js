@@ -11,7 +11,13 @@ let filter = {
     getOrder: (orden, direccion) => {
         const orderDireccion = direccion === '' ? 'ASC' : direccion || 'ASC';
         return ` ORDER BY ${orden} ${orderDireccion.toUpperCase()}`;
+    },
+
+    getInfoToken: (req, key) => {
+        // obtiene los valores del token segun key: idorg=idorg => val a buscar idorg
+        return req.usuariotoken[key] || null;
     }
 }
 
 module.exports = filter;
+
