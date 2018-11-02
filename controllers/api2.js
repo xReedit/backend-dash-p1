@@ -1,7 +1,8 @@
 const { to, ReE, ReS }  = require('../service/uitl.service');
 let Sequelize = require('sequelize');
 let config = require('../config');
-let managerFilter = require('../utilitarios/filters')
+let managerFilter = require('../utilitarios/filters');
+let BuildSql = require('../service/buildsql.service');
 
 
 let sequelize = new Sequelize(config.database, config.username, config.password, config.sequelizeOption);
@@ -20,24 +21,10 @@ const create = async function(req, res){
     if(JSON.stringify(req.body) == '{}') {        
         return ReE(res, 'Faltan parametros')                
     }
-    
-    let keys = '';
-	let values = '';	
-	Object.keys(req.body).forEach(function(key, index) {
-		let val = req.body[key];
-
-		// info token
-		val = managerFilter.getInfoToken(req, val) || val;
-		
-		keys += "`"+key+"`";
-		values += mysql_clean(val);
-		if(Object.keys(req.body).length != (index+1)) {
-			keys += ',';
-			values += ',';
-		}
-    });
-
-    sequelize.query("INSERT INTO `" + ( TABLE_PREFIX + req.params.table ) + "` (" + keys + ") VALUES ("+ values +")", { type: sequelize.QueryTypes.INSERT})
+	const values = BuildSql.Insert(req);
+	
+	sequelize.query("INSERT INTO `" + (TABLE_PREFIX + req.params.table) + values, { type: sequelize.QueryTypes.INSERT})
+	
 	.then(function(id) {
         return ReS(res, {id:id});    
 	}).catch((err)=> {return ReE(res, err);});

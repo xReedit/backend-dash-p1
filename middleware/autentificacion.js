@@ -3,7 +3,7 @@ let jwt = require('jsonwebtoken');
 const SEED = require('../config').SEED;
 
 exports.verificarToken = function (req, res, next) {
-        var token = req.query.token;
+        var token = req.headers.authorization; //req.query.token ;
 
         jwt.verify(token, SEED, (err, decode) => {
                 if (err) {                        
