@@ -6,10 +6,15 @@ const login = require('../controllers/login');
 
 const auth = require('../middleware/autentificacion');
 
+var pruebaController = require('../controllers/prueba');
+
+
+
 router.get('/', function(req, res, next) {
     res.json({status:"success", message:"Parcel Pending API", data:{"version_number":"v1.0.0"}})    
 });
 
+router.get('/modelos/prueba', pruebaController.getAll);
 
 router.post('/api/:table/create', auth.verificarToken, api2.create);
 router.get('/api/:table/getall',api2.getAll);

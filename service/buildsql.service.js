@@ -26,6 +26,9 @@ let buildSql = {
                         keys = '';
                         values='';
                         Object.keys(row).forEach(function (key, index) {
+                                // X_ = indica no guardar
+                                if (key.indexOf('X_') >= 0 ) { return; }
+                                
                                 let val = row[key];
         
                                 // info token

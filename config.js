@@ -14,7 +14,16 @@ config.host="localhost";
 config.dialect="mysql";
 config.operatorsAliases = false;
 
-config.sequelizeOption = { host:"localhost", dialect:"mysql", operatorsAliases:false }
+config.sequelizeOption = { 
+        host:"localhost", 
+        dialect:"mysql", 
+        operatorsAliases: false, timezone: "+03:00",
+                define: {
+                        underscored: true,
+                        timestamps: false
+                },
+                logging: false
+        }
 
 config.table_prefix = '';
 //Pagination

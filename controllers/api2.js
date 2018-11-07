@@ -93,6 +93,7 @@ module.exports.getById = getById;
 
 const getFilterBy = async function(req, res){
     let filtros = managerFilter.getFilters(req.params.filter);
+    console.log(filtros);
     const orden = req.query.orden ? managerFilter.getOrder(req.query.orden, req.query.ordendireccion) : '';
 
     let read_query = "SELECT * FROM `"+TABLE_PREFIX+req.params.table+"` WHERE "+ filtros + orden;
