@@ -31,8 +31,8 @@ let buildSql = {
                                 
                                 let val = row[key];
         
-                                // info token
-                                val = managerFilter.getInfoToken(req, val) || val;
+                                // info token // esto coloca automaticamente por ejemplo el idorg y el idsede (si viene en el body > {idorg: '', idsede:''})
+                                val = managerFilter.getInfoToken(req, key) || val;                                
         
                                 keys += "`" + key + "`";
                                 values += mysql_clean(val);

@@ -5,19 +5,20 @@ const {
 } = require('../service/uitl.service');
 
 
-const db = require('../modelos/index');
+// const db = require('../modelos/index');
+// const db = require('../models/index');
+
+// , nested: true
+
+var models = require('../models');
 
 const getAll = async function (req, res) {
-        console.log(db.mainDb.prueba);
-        db.mainDb.prueba.findAll({
-                        include: [db.mainDb.test]
-                }).then(datos => {
-                return ReS(res, {
-                        data: datos
-                }).catch((err) => {
-                        return ReE(res, err);
-                });
+        const prueba = models.producto;
+        prueba.findAll({
+                include: [{ all: true, nested: true }]
         })
+        .then(datos => ReS(res, {data: datos}))
+        .catch(err => ReE(res, err));
 }
 
 module.exports.getAll = getAll;

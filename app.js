@@ -19,6 +19,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // soporte para bodies codif
 
 var appV1 = require('./routes/v1');
 
+var index = require('./models/index');
+
 
 
 app.use('/v1',appV1);
