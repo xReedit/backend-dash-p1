@@ -73,10 +73,22 @@ db['producto_detalle'].belongsTo(db['producto'], { foreignKey: "idproducto" });
 db['producto_stock'].belongsTo(db['producto_detalle'], { foreignKey: "idproducto_detalle" });
 db['producto_stock'].belongsTo(db['almacen'], { foreignKey: "idalmacen" });
 
-// db['distribuicion'].belongsTo(db['almacen'], { foreignKey: "idalmacen_a" });
-// db['distribuicion'].belongsTo(db['almacen'], { foreignKey: "idalmacen_d" });
+db['distribuicion'].belongsTo(db['almacen'], { as: 'a_idalmacen', foreignKey: "idalmacen_a" });
+db['distribuicion'].belongsTo(db['almacen'], { as: 'd_idalmacen', foreignKey: "idalmacen_d" });
 db['distribuicion'].belongsTo(db['usuario'], { foreignKey: "idusuario" });
 
+
+
+
+
+// actualizar modelos
+/// ./node_modules/sequelize-auto/bin/sequelize-auto -o "./models" -d transactor -h localhost -u adminTransactor -x @Dmin159159159 -e mysql
+
+
+// colocar en password del usuario para proteger contraseña devuelta
+// get() {
+//         return ':)';
+// }
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

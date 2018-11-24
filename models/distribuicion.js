@@ -1,8 +1,8 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('almacen', {
-    idalmacen: {
+  return sequelize.define('distribuicion', {
+    iddistribuicion: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
@@ -10,22 +10,26 @@ module.exports = function(sequelize, DataTypes) {
     },
     idorg: {
       type: DataTypes.INTEGER(11),
-      allowNull: true,
-      references: {
-        model: 'org',
-        key: 'idorg'
-      }
+      allowNull: true
     },
     idsede: {
       type: DataTypes.INTEGER(11),
-      allowNull: true,
-      references: {
-        model: 'sede',
-        key: 'idsede'
-      }
+      allowNull: true
     },
-    descripcion: {
-      type: DataTypes.STRING(100),
+    fecha: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
+    idalmacen_d: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    idalmacen_a: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true
+    },
+    idusuario: {
+      type: DataTypes.STRING(45),
       allowNull: true
     },
     estado: {
@@ -34,6 +38,6 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: '0'
     }
   }, {
-    tableName: 'almacen'
+    tableName: 'distribuicion'
   });
 };
