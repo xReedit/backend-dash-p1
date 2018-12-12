@@ -38,18 +38,20 @@ const update = async function(req, res){
 		.then(function(keys) {
 			let primary_key = keys[0].Column_name;
 			if(JSON.stringify(req.body) == '{}') {
-                return ReE(res, {message: 'Faltan parametros'})  				
+				return ReE(res, {message: 'Faltan parametros'})  				
 			}
             
-            let update_string = '';
-			Object.keys(req.body).forEach(function(key, index) {
-				let val = req.body[key];
-				update_string += "`" + key + "` = " + mysql_clean(val); 
-				if(Object.keys(req.body).length != (index+1)) {
-					update_string += ',';
-				}
-			});
-            
+        //     let update_string = '';
+	// 		Object.keys(req.body).forEach(function(key, index) {
+	// 			let val = req.body[key];
+	// 			update_string += "`" + key + "` = " + mysql_clean(val); 
+	// 			if(Object.keys(req.body).length != (index+1)) {
+	// 				update_string += ',';
+	// 			}
+	// 		});			
+	    
+	    const update_string = BuildSql.update(req);
+	    console.log('update_string', update_string);
             sequelize.query("UPDATE `" + ( TABLE_PREFIX + req.params.table ) + "` SET " + update_string + " WHERE `"+ primary_key +"` = "+mysql_clean(req.params.id), { type: sequelize.QueryTypes.UPDATE})
 			.then(function() {				
                 return ReS(res, {message:'Update'});  

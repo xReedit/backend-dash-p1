@@ -1,4 +1,5 @@
 
+const fechaService = require('./fecha');
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
 
@@ -93,9 +94,23 @@ let filter = {
         return arrRpt;
     },
 
-    getInfoToken: (req, key) => {
-        // obtiene los valores del token segun key: idorg=idorg => val a buscar idorg
+    getInfoToken: (req, key) => {        
+        // obtiene los valores del token segun key: idorg=idorg => val a buscar idorg        
         return req.usuariotoken[key] || null;
+    },
+    
+    getFecha: (key, val) => {
+        var rpt = val;
+        switch (key) {
+            case 'fecha':
+                rpt = fechaService.getFechaActual();
+                break;
+            case 'hora':
+                rpt = fechaService.getHoraActual();
+                break;            
+        }
+
+        return rpt
     }
 }
 

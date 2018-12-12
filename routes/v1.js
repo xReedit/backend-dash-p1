@@ -22,7 +22,10 @@ router.get('/model/:table/getById/:id', apiModels.getById);
 router.get('/model/:table/getFilterBy/:filter', apiModels.getFilterBy);
 router.get('/model/:table/getpagination/:filter', apiModels.getPagination);
 
-router.post('/api/:table/create', auth.verificarToken, api2.create);
+router.post('/model/:table/create', auth.verificarToken, apiModels.create);
+
+
+router.post('/api/:table/create', api2.create);
 router.get('/api/:table/getall',api2.getAll);
 router.put('/api/:table/update/:id', auth.verificarToken, api2.update);
 router.delete('/api/:table/remove/:id', auth.verificarToken, api2.remove);

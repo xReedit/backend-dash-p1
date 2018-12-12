@@ -28,6 +28,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(200),
       allowNull: true
     },
+    fechanac: {
+      type: DataTypes.STRING(30),
+      allowNull: true
+    },
     dni: {
       type: DataTypes.CHAR(11),
       allowNull: true
@@ -50,6 +54,16 @@ module.exports = function(sequelize, DataTypes) {
     },
     estado: {
       type: DataTypes.INTEGER(1),
+      allowNull: true,
+      defaultValue: '0'
+    },
+    linea_credito: {
+      type: DataTypes.INTEGER(5),
+      allowNull: true,
+      defaultValue: '0'
+    },
+    linea_credito_utilizada: {
+      type: DataTypes.INTEGER(5),
       allowNull: true,
       defaultValue: '0'
     }

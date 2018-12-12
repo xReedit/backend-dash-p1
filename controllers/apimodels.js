@@ -1,6 +1,7 @@
 const { to, ReE, ReS} = require('../service/uitl.service');
 const models = require('../models');
 const managerFilter = require('../utilitarios/filters');
+const BuildSql = require('../service/buildsql.service');
 
 const sequelize = require('sequelize');
 const Op = sequelize.Op;
@@ -108,3 +109,17 @@ const getPagination = async function (req, res) {
                         }).catch(err => ReE(res, err));
 }
 module.exports.getPagination = getPagination;
+
+const create = async function (req, res) {
+        const nomTabla = req.params.table;
+        var model = models[nomTabla];        
+
+        const datos = BuildSql.InsertJSON(req);  
+        console.log('create', datos);
+        datos.forEach(element => { // multiples filas
+                model.create(element)
+                .then((data) => {return ReS(res, {data: data}) })
+                .catch((err) => { return ReE(res, err);});
+        });        
+}
+module.exports.create = create;

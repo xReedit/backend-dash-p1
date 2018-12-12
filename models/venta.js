@@ -1,8 +1,8 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('usuario', {
-    idusuario: {
+  return sequelize.define('venta', {
+    idventa: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
@@ -24,18 +24,37 @@ module.exports = function(sequelize, DataTypes) {
         key: 'idsede'
       }
     },
-    nombres: {
-      type: DataTypes.STRING(200),
-      allowNull: true
-    },
-    usuario: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
-    password: {
-      type: DataTypes.STRING(255),
+    idusuario: {
+      type: DataTypes.INTEGER(11),
       allowNull: true,
-      get() { return ':)'; }
+      references: {
+        model: 'usuario',
+        key: 'idusuario'
+      }
+    },
+    idcliente: {
+      type: DataTypes.INTEGER(11),
+      allowNull: true,
+      references: {
+        model: 'cliente',
+        key: 'idcliente'
+      }
+    },
+    fecha: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
+    hora: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
+    dsct: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
+    total: {
+      type: DataTypes.STRING(45),
+      allowNull: true
     },
     estado: {
       type: DataTypes.INTEGER(1),
@@ -43,6 +62,6 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: '0'
     }
   }, {
-    tableName: 'usuario'
+    tableName: 'venta'
   });
 };

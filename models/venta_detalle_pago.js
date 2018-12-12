@@ -1,48 +1,43 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('usuario', {
-    idusuario: {
+  return sequelize.define('venta_detalle_pago', {
+    idventa_detalle_pago: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    idorg: {
+    idventa: {
       type: DataTypes.INTEGER(11),
       allowNull: true,
       references: {
-        model: 'org',
-        key: 'idorg'
+        model: 'venta',
+        key: 'idventa'
       }
     },
-    idsede: {
+    idtipo_pago: {
       type: DataTypes.INTEGER(11),
       allowNull: true,
       references: {
-        model: 'sede',
-        key: 'idsede'
+        model: 'tipo_pago',
+        key: 'idtipo_pago'
       }
     },
-    nombres: {
-      type: DataTypes.STRING(200),
+    importe: {
+      type: DataTypes.INTEGER(11),
       allowNull: true
-    },
-    usuario: {
-      type: DataTypes.STRING(50),
-      allowNull: true
-    },
-    password: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      get() { return ':)'; }
     },
     estado: {
       type: DataTypes.INTEGER(1),
       allowNull: true,
       defaultValue: '0'
+    },
+    fecha_pago: {
+      type: DataTypes.STRING(45),
+      allowNull: true
     }
   }, {
-    tableName: 'usuario'
+    tableName: 'venta_detalle_pago'
   });
 };

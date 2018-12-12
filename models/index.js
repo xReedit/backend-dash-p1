@@ -52,6 +52,7 @@ db['almacen'].belongsTo(db['sede'], { foreignKey: "idsede" });
 
 db['cliente'].belongsTo(db['org'], { foreignKey: "idorg" });
 db['cliente'].belongsTo(db['sede'], { foreignKey: "idsede" });
+// db['cliente'].hasMany(db['cliente_linea_credito'], { foreignKey: "idcliente" });
 
 db['marca'].belongsTo(db['org'], { foreignKey: "idorg" });
 db['marca'].belongsTo(db['sede'], { foreignKey: "idsede" });
@@ -76,6 +77,30 @@ db['producto_stock'].belongsTo(db['almacen'], { foreignKey: "idalmacen" });
 db['distribuicion'].belongsTo(db['almacen'], { as: 'a_idalmacen', foreignKey: "idalmacen_a" });
 db['distribuicion'].belongsTo(db['almacen'], { as: 'd_idalmacen', foreignKey: "idalmacen_d" });
 db['distribuicion'].belongsTo(db['usuario'], { foreignKey: "idusuario" });
+db['distribuicion'].hasMany(db['distribuicion_detalle'], {foreignKey: "iddistribuicion"});
+
+db['registro_pago'].belongsTo(db['org'], { foreignKey: "idorg" });
+db['registro_pago'].belongsTo(db['sede'], { foreignKey: "idsede" });
+db['registro_pago'].belongsTo(db['usuario'], { foreignKey: "idusuario" });
+db['registro_pago'].belongsTo(db['cliente'], { foreignKey: "idcliente" });
+db['registro_pago'].hasMany(db['registro_pago_detalle'], { foreignKey: "idregistro_pago" });
+
+db['registro_pago_detalle'].belongsTo(db['registro_pago'], {foreignKey: "idregistro_pago"});
+db['registro_pago_detalle'].belongsTo(db['tipo_pago'], {foreignKey: "idtipo_pago"});
+
+db['venta'].belongsTo(db['org'], { foreignKey: "idorg" });
+db['venta'].belongsTo(db['sede'], { foreignKey: "idsede" });
+db['venta'].belongsTo(db['usuario'], { foreignKey: "idusuario" });
+db['venta'].belongsTo(db['cliente'], { foreignKey: "idcliente" });
+db['registro_pago'].hasMany(db['venta_detalle'], {
+        foreignKlinea_credito_utilizadaey: "idventa"
+});
+
+db['venta_detalle'].belongsTo(db['venta'], { foreignKey: "idventa" });
+db['venta_detalle'].belongsTo(db['producto_stock'], { foreignKey: "idproducto_stock" });
+db['venta_detalle'].belongsTo(db['producto_detalle'], { foreignKey: "idproducto_detalle" });
+
+
 
 
 
@@ -86,9 +111,7 @@ db['distribuicion'].belongsTo(db['usuario'], { foreignKey: "idusuario" });
 
 
 // colocar en password del usuario para proteger contraseña devuelta
-// get() {
-//         return ':)';
-// }
+// get() { return ':)'; }
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
