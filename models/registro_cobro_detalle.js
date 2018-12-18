@@ -1,19 +1,19 @@
 /* jshint indent: 2 */
 
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('venta_detalle_pago', {
-    idventa_detalle_pago: {
+  return sequelize.define('registro_cobro_detalle', {
+    idregistro_cobro_detalle: {
       type: DataTypes.INTEGER(11),
       allowNull: false,
       primaryKey: true,
       autoIncrement: true
     },
-    idventa: {
+    idregistro_cobro: {
       type: DataTypes.INTEGER(11),
       allowNull: true,
       references: {
-        model: 'venta',
-        key: 'idventa'
+        model: 'registro_cobro',
+        key: 'idregistro_cobro'
       }
     },
     idtipo_pago: {
@@ -24,20 +24,8 @@ module.exports = function(sequelize, DataTypes) {
         key: 'idtipo_pago'
       }
     },
-    fecha_pago: {
-      type: DataTypes.STRING(45),
-      allowNull: true
-    },
     importe: {
-      type: DataTypes.INTEGER(5),
-      allowNull: true
-    },
-    pagado: {
-      type: DataTypes.INTEGER(5),
-      allowNull: true
-    },
-    diferencia: {
-      type: DataTypes.INTEGER(5),
+      type: DataTypes.STRING(45),
       allowNull: true
     },
     estado: {
@@ -46,6 +34,6 @@ module.exports = function(sequelize, DataTypes) {
       defaultValue: '0'
     }
   }, {
-    tableName: 'venta_detalle_pago'
+    tableName: 'registro_cobro_detalle'
   });
 };

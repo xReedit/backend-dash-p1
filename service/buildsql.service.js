@@ -99,9 +99,9 @@ let buildSql = {
                                 row[key] = val;
 
                         })
-                })
-
-                return data;
+                });
+                
+                return data.filter(x => x!==[]).map(x => x);
         }
 }
 

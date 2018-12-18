@@ -48,18 +48,20 @@ let filter = {
                     case "gt": _valCol = { [Op.gt]: valCol}; break;
                     case "contains":                        
 
-                    // para utilizar like se concatena
+                    // para utilizar like(contains) se concatena
                     // el formato es: `producto_detalle->producto`.`descripcion`,`producto_detalle`.`codigobarra`:contains:1165
 
                         let cols = nomCol.split(',');
                         let cols_s=[];
                         let where;
+                        
+                        
                         if (cols.length > 1) { 
-
+                            
                             cols.map((x,i) => {
                                 _nomCol = x.replace('$', '');                                                                
                                 cols_s[i] = _nomCol;                             
-                            })                            
+                            });
 
                             let args = Array.from(cols_s);
                             args = args.map((arg) => sequelize.literal(arg));

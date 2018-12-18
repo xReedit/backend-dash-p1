@@ -88,17 +88,30 @@ db['registro_pago'].hasMany(db['registro_pago_detalle'], { foreignKey: "idregist
 db['registro_pago_detalle'].belongsTo(db['registro_pago'], {foreignKey: "idregistro_pago"});
 db['registro_pago_detalle'].belongsTo(db['tipo_pago'], {foreignKey: "idtipo_pago"});
 
+db['registro_cobro'].belongsTo(db['org'], { foreignKey: "idorg" });
+db['registro_cobro'].belongsTo(db['sede'], { foreignKey: "idsede" });
+db['registro_cobro'].belongsTo(db['usuario'], { foreignKey: "idusuario" });
+db['registro_cobro'].belongsTo(db['cliente'], { foreignKey: "idcliente" });
+db['registro_cobro'].hasMany(db['registro_cobro_detalle'], { foreignKey: "idregistro_cobro" });
+
+db['registro_cobro_detalle'].belongsTo(db['registro_cobro'], {foreignKey: "idregistro_cobro"});
+db['registro_cobro_detalle'].belongsTo(db['tipo_pago'], {foreignKey: "idtipo_pago"});
+
+db['registro_cobro_bitacora'].belongsTo(db['cliente'], { foreignKey: "idcliente" });
+db['registro_cobro_bitacora'].belongsTo(db['usuario'], { foreignKey: "idusuario" });
+
 db['venta'].belongsTo(db['org'], { foreignKey: "idorg" });
 db['venta'].belongsTo(db['sede'], { foreignKey: "idsede" });
 db['venta'].belongsTo(db['usuario'], { foreignKey: "idusuario" });
 db['venta'].belongsTo(db['cliente'], { foreignKey: "idcliente" });
-db['registro_pago'].hasMany(db['venta_detalle'], {
-        foreignKlinea_credito_utilizadaey: "idventa"
-});
 
 db['venta_detalle'].belongsTo(db['venta'], { foreignKey: "idventa" });
 db['venta_detalle'].belongsTo(db['producto_stock'], { foreignKey: "idproducto_stock" });
 db['venta_detalle'].belongsTo(db['producto_detalle'], { foreignKey: "idproducto_detalle" });
+
+
+db['venta_detalle_pago'].belongsTo(db['venta'], { foreignKey: "idventa", as: 'venta' });
+db['venta_detalle_pago'].belongsTo(db['tipo_pago'], { foreignKey: "idtipo_pago"});
 
 
 

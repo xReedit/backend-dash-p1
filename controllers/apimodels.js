@@ -123,3 +123,25 @@ const create = async function (req, res) {
         });        
 }
 module.exports.create = create;
+
+const update = async function (req, res) {
+        const nomTabla = req.params.table;
+        const _nomid = 'id' + nomTabla;
+        var model = models[nomTabla];
+
+        const datos = BuildSql.InsertJSON(req);
+        console.log('update', datos);
+        datos.forEach(element => { // multiples filas                        
+                const _where = {[_nomid]: element[_nomid]};             
+                model.update(element, {where: _where })
+                        .then((data) => {
+                                return ReS(res, {
+                                        data: data
+                                })
+                        })
+                        .catch((err) => {
+                                return ReE(res, err);
+                        });
+        });
+}
+module.exports.update = update;
