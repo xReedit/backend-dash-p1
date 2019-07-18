@@ -20,7 +20,7 @@ router.get('/', function (req, res, next) {
 router.post('/login', login.logger);
 router.post('/verificarToken', auth.verificarToken);
 
-router.get('/estadistica/init', auth.verificarToken, apiEstadistica.init);
+router.get('/estadistica/init', apiEstadistica.init);
 router.get('/estadistica/getMetaSede', auth.verificarToken, apiEstadistica.getMetaSede);
 router.post('/estadistica/setMetaSede', auth.verificarToken, apiEstadistica.setMetaSede);
 
