@@ -1,8 +1,8 @@
 var express = require("express"); 
 var bodyParser = require('body-parser');
 var cors=require('cors');
-
 var app = express();
+var config = require('./config');
 
 app.use(cors());
 app.use(bodyParser.json()); // soporte para bodies codificados en jsonsupport
@@ -46,8 +46,8 @@ app.use(function(err, req, res, next) {
     res.render('error');
 });
 
-var server = app.listen(3000, function () {
-    console.log('Server is running.. port 3000'); 
+var server = app.listen(config.port, function () {
+    console.log('Server is running.. port '+ config.port); 
 });
 
 module.exports = app;
