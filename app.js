@@ -30,7 +30,11 @@ app.use('/v2',appV2);
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
-    next(err);
+    res.json({
+        status: 0,
+        data: err.message
+    });
+    // next(err);
 });
 
 
@@ -43,7 +47,7 @@ app.use(function(err, req, res, next) {
         status: 0,
         data: err.message
     });
-    res.render('error');
+    // res.render('error');
 });
 
 var server = app.listen(config.port, function () {

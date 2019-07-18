@@ -1,7 +1,7 @@
 // 
 
 let express = require("express");
-const router = express.Router();
+let router = express.Router();
 
 const apiEstadistica = require('../controllers/apiEstadistica');
 const login = require('../controllers/login');
