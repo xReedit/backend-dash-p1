@@ -30,11 +30,7 @@ app.use('/v2',appV2);
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
     err.status = 404;
-    res.json({
-        status: 0,
-        data: err.message
-    });
-    // next(err);
+    next(err);
 });
 
 
