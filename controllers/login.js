@@ -16,21 +16,22 @@ module.exports.init = init;
 
 
 const logger = async function (req, res) {
-        const usuario = req.body.usuario;
-        const pass = req.body.password;
+        const usuario = req.body.nomusuario;
+        const pass = req.body.pass;
 
         console.log('passs ', req.body);
 
-        let read_query = "SELECT * FROM `usuario` WHERE `usuario` = '" + usuario + "'";
+        let read_query = "SELECT * FROM `usuario` WHERE `usuario` = '" + usuario + "' and estadistica=1";
         console.log(read_query);
 
         sequelize.query(read_query, { type: sequelize.QueryTypes.SELECT })
                 .then(function (rows) {
                         
-                        const result = bcrypt.compareSync(pass, rows[0].password);                        
+                        const result =  pass === rows[0].pass; //bcrypt.compareSync(pass, rows[0].password);                        
                         if (!result) {
-                                return ReE(res, 'Credenciales Incorrectas.');                                
-                        } 
+                                return ReE(res, 'Credenciales Incorrectas.');
+                                // return ReE(res, { usuario: rows[0], error: 'Credenciales Incorrectas' });
+                        }
 
                         rows[0].password = ':)';
                         const token = jwt.sign({ usuario: rows[0] }, SEED, { expiresIn: 14400 });

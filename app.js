@@ -17,13 +17,13 @@ app.use(bodyParser.urlencoded({ extended: true })); // soporte para bodies codif
 //     next();
 // });
 
-var appV1 = require('./routes/v1');
+// var appV1 = require('./routes/v1');
 
-var index = require('./models/index');
+// var index = require('./models/index');
 
 
-
-app.use('/v1',appV1);
+var appV2 = require('./routes/v2');
+app.use('/v2',appV2);
 
 
 
@@ -47,7 +47,7 @@ app.use(function(err, req, res, next) {
 });
 
 var server = app.listen(3000, function () {
-    console.log('Server is running..'); 
+    console.log('Server is running.. port 3000'); 
 });
 
 module.exports = app;

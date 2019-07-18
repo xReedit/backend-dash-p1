@@ -6,16 +6,16 @@ config.port = 3000;
 config.auth = false;
 
 //Database
-config.database = 'transactor';
-config.username = 'adminTransactor';
-config.password = '@Dmin159159159';
+config.database = 'restobar';
+config.username = 'resto';
+config.password = '182182';
 
-config.host="localhost";
+config.host="192.168.1.64";
 config.dialect="mysql";
 config.operatorsAliases = false;
 
 config.sequelizeOption = { 
-        host:"localhost", 
+        host:"192.168.1.64", 
         dialect:"mysql", 
         operatorsAliases: false, timezone: "+03:00",
                 define: {
