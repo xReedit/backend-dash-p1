@@ -1,5 +1,4 @@
 var config = {};
-
 config.port = 3000;
 
 //Authentication
