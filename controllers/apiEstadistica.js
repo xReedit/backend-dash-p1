@@ -34,16 +34,8 @@ const getMetaSede = async function (req, res) {
         const idsede = managerFilter.getInfoToken(req, 'idsede');
         
         let read_query = `SELECT * from sede_meta where(idorg = ${idorg} and idsede = ${idsede}) and estado = 0`;        
-        console.log(read_query);
-         sequelize.query(read_query, {type: sequelize.QueryTypes.SELECT})
-                .then(function (rows) {
-                        return ReS(res, {
-                                data: rows
-                        });
-                })
-                .catch((err) => {
-                        return ReE(res, err);
-                });
+
+        emitirRespuesta(read_query, res);
 
 }
 module.exports.getMetaSede = getMetaSede;
@@ -55,16 +47,8 @@ const setMetaSede = async function (req, res) {
         
         
         let read_query = `call procedure_insert_update_metas(${idorg},${idsede},'${JSON.stringify(metas)}')`;
-        console.log(read_query);
-         sequelize.query(read_query, {type: sequelize.QueryTypes.SELECT})
-                .then(function (rows) {
-                        return ReS(res, {
-                                data: rows
-                        });
-                })
-                .catch((err) => {
-                        return ReE(res, err);
-                });
+
+        emitirRespuesta(read_query, res);        
 
 }
 module.exports.setMetaSede = setMetaSede;
@@ -73,16 +57,6 @@ const getVentas = async function (req, res) {
 	const idorg = managerFilter.getInfoToken(req,'idorg');
 	const idsede = managerFilter.getInfoToken(req, 'idsede');
 
-	// let read_query = `
-	// SELECT * , DATE_FORMAT(CURDATE(), '%d/%m/%Y') as f_actual
-	// from registro_pago_detalle as rpd
-	// 	inner join registro_pago as rp using(idregistro_pago)
-	// 	inner join tipo_pago as tp using(idtipo_pago)
-	// 	left join cliente as c using(idcliente)
-	// where(rp.idorg = ${idorg} and rp.idsede = ${idsede}) and(rp.estado = 0 and rpd.estado = 0)
-	// order by rp.idregistro_pago desc
-	// `;
-
 	let read_query = `
 	SELECT *, rp.total as importe , DATE_FORMAT(CURDATE(), '%d/%m/%Y') as f_actual
 	from registro_pago as rp		
@@ -90,33 +64,14 @@ const getVentas = async function (req, res) {
 	where(rp.idorg = ${idorg} and rp.idsede = ${idsede}) and(rp.estado = 0)
 	order by rp.idregistro_pago desc
 	`;
-	console.log(read_query);
-	sequelize.query(read_query, {type: sequelize.QueryTypes.SELECT})
-		.then(function (rows) {
-			return ReS(res, {
-				data: rows
-			});
-		})
-		.catch((err) => {
-			return ReE(res, err);
-		});
 
+	emitirRespuesta(read_query, res);
 }
 module.exports.getVentas = getVentas;
 
 const getConsumo = async function (req, res) {
 	const idorg = managerFilter.getInfoToken(req,'idorg');
 	const idsede = managerFilter.getInfoToken(req, 'idsede');
-
-	// let read_query = `
-	// SELECT * , CONCAT(p.fecha,' ',p.hora) fecha_hora_a, rpd.importe as total_a
-	// from registro_pago_pedido as rpp
-	// 	inner JOIN registro_pago_detalle as rpd on rpp.idregistro_pago=rpd.idregistro_pago
-	// 	inner JOIN pedido_detalle as pd using(idpedido_detalle)
-	// 	inner JOIN pedido as p on pd.idpedido = p.idpedido
-	// 	inner JOIN tipo_consumo as tp on tp.idtipo_consumo = pd.idtipo_consumo
-	// where p.idorg=${idorg} and p.idsede=${idsede}
-	// `;
 
 	let read_query = `
 	SELECT *, CONCAT(p.fecha,' ',p.hora) fecha_hora_a, pd.ptotal_r as total_a, tpc.descripcion as tpc_descripcion
@@ -129,16 +84,32 @@ const getConsumo = async function (req, res) {
 	where p.idorg=${idorg} and p.idsede=${idsede} and (p.estado=2 and pd.estado=0)	
 	`;
 
-	console.log(read_query);
-	sequelize.query(read_query, {type: sequelize.QueryTypes.SELECT})
-		.then(function (rows) {
-			return ReS(res, {
-				data: rows
-			});
-		})
-		.catch((err) => {
-			return ReE(res, err);
-		});
-
+	emitirRespuesta(read_query, res);
 }
 module.exports.getConsumo = getConsumo;
+
+
+const getIngresosGastos = async function (req, res) {
+	const idorg = managerFilter.getInfoToken(req,'idorg');
+	const idsede = managerFilter.getInfoToken(req, 'idsede');
+	const arr = req.body;
+	
+	let read_query = `CALL procedure_dash_ingresos_egresos(${idorg}, ${idsede}, '${JSON.stringify(arr)}')`;
+	
+	emitirRespuesta(read_query, res);
+
+}
+module.exports.getIngresosGastos = getIngresosGastos;
+
+function emitirRespuesta(xquery, res) {
+	console.log(xquery);
+	sequelize.query(xquery, {type: sequelize.QueryTypes.SELECT})
+	.then(function (rows) {
+		return ReS(res, {
+			data: rows
+		});
+	})
+	.catch((err) => {
+		return ReE(res, err);
+	});
+}

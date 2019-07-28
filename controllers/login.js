@@ -33,7 +33,7 @@ const logger = async function (req, res) {
                                 // return ReE(res, { usuario: rows[0], error: 'Credenciales Incorrectas' });
                         }
 
-                        rows[0].password = ':)';
+                        rows[0].pass = ':)';
                         const token = jwt.sign({ usuario: rows[0] }, SEED, { expiresIn: 14400 });
 
                         return ReS(res, { usuario: rows[0], token: token });
