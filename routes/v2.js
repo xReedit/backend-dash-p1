@@ -29,7 +29,7 @@ router.get('/estadistica/getConsumo', auth.verificarToken, apiEstadistica.getCon
 router.get('/estadistica/getFechaNow', apiEstadistica.getFechaNow);
 
 // PUNTO DE EQUILIBRIO
-// ingresos y gastos
+// ingresos y gastos 
 router.post('/estadistica/getIngresosGastos', auth.verificarToken, apiEstadistica.getIngresosGastos);
 
 module.exports = router;
