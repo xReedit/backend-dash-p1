@@ -7,7 +7,7 @@ exports.verificarToken = function (req, res, next) {
 
         jwt.verify(token, SEED, (err, decode) => {
                 if (err) {                        
-                        return ReE(res, 'Token incorrecto.');                                
+                        return ReE(res, 'Token incorrecto.', 401);                                
                 }
 
                 req.usuariotoken = decode.usuario;                

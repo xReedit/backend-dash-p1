@@ -57,13 +57,15 @@ const getVentas = async function (req, res) {
 	const idorg = managerFilter.getInfoToken(req,'idorg');
 	const idsede = managerFilter.getInfoToken(req, 'idsede');
 
-	let read_query = `
-	SELECT *, rp.total as importe , DATE_FORMAT(CURDATE(), '%d/%m/%Y') as f_actual
-	from registro_pago as rp		
-		left join cliente as c using(idcliente)
-	where(rp.idorg = ${idorg} and rp.idsede = ${idsede}) and(rp.estado = 0)
-	order by rp.idregistro_pago desc
-	`;
+	// let read_query = `
+	// SELECT *, rp.total as importe , DATE_FORMAT(CURDATE(), '%d/%m/%Y') as f_actual
+	// from registro_pago as rp		
+	// 	left join cliente as c using(idcliente)
+	// where(rp.idorg = ${idorg} and rp.idsede = ${idsede}) and(rp.estado = 0)
+	// order by rp.idregistro_pago desc
+	// `;
+
+	let read_query = `CALL procedure_dash_ingresos_egresos(${idorg}, ${idsede})`;
 
 	emitirRespuesta(read_query, res);
 }
@@ -100,6 +102,21 @@ const getIngresosGastos = async function (req, res) {
 
 }
 module.exports.getIngresosGastos = getIngresosGastos;
+
+const getSedes = async function (req, res) {
+	const idorg = managerFilter.getInfoToken(req,'idorg');		
+	
+	let read_query = `SELECT s.idsede, concat (s.nombre,' ', s.ciudad) nombre
+					from sede s 
+					inner join usuario u using(idsede)
+					where u.idorg=${idorg} and u.rol=1 and u.estado=0 
+					order by s.nombre`;
+	
+	emitirRespuesta(read_query, res);
+
+}
+module.exports.getSedes = getSedes;
+
 
 function emitirRespuesta(xquery, res) {
 	console.log(xquery);

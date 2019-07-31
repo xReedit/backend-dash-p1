@@ -28,6 +28,9 @@ router.get('/estadistica/getVentas', auth.verificarToken, apiEstadistica.getVent
 router.get('/estadistica/getConsumo', auth.verificarToken, apiEstadistica.getConsumo);
 router.get('/estadistica/getFechaNow', apiEstadistica.getFechaNow);
 
+// INFO COMPONENTES
+router.get('/estadistica/getSedes', auth.verificarToken, apiEstadistica.getSedes);
+
 // PUNTO DE EQUILIBRIO
 // ingresos y gastos 
 router.post('/estadistica/getIngresosGastos', auth.verificarToken, apiEstadistica.getIngresosGastos);
