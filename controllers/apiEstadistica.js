@@ -57,17 +57,18 @@ const getVentas = async function (req, res) {
 	const idorg = managerFilter.getInfoToken(req,'idorg');
 	const idsede = managerFilter.getInfoToken(req, 'idsede');
 
-	let read_query = `
-	SELECT *, rp.total as importe , DATE_FORMAT(CURDATE(), '%d/%m/%Y') as f_actual
-	from registro_pago as rp		
-		left join cliente as c using(idcliente)
-	where(rp.idorg = ${idorg} and rp.idsede = ${idsede}) and(rp.estado = 0)
-	order by rp.idregistro_pago desc
-	`;
+	// let read_query = `
+	// SELECT *, rp.total as importe , DATE_FORMAT(CURDATE(), '%d/%m/%Y') as f_actual
+	// from registro_pago as rp		
+	// 	left join cliente as c using(idcliente)
+	// where(rp.idorg = ${idorg} and rp.idsede = ${idsede}) and(rp.estado = 0)
+	// order by rp.idregistro_pago desc
+	// `;
 
-	// let read_query = `CALL procedure_dash_ventas(${idorg}, ${idsede})`;
+	let read_query = `CALL procedure_dash_ventas(${idorg}, ${idsede})`;
 
-	emitirRespuesta(read_query, res);
+
+	emitirRespuestaSP(read_query, res);
 }
 module.exports.getVentas = getVentas;
 
@@ -122,8 +123,30 @@ function emitirRespuesta(xquery, res) {
 	console.log(xquery);
 	sequelize.query(xquery, {type: sequelize.QueryTypes.SELECT})
 	.then(function (rows) {
+
+		// let _rows = typeof (rows) === 'object' ? Object.values(rows[0]) : rows;
 		return ReS(res, {
 			data: rows
+		});
+	})
+	.catch((err) => {
+		return ReE(res, err);
+	});
+}
+
+function emitirRespuestaSP(xquery, res) {
+	console.log(xquery);
+	sequelize.query(xquery, {		
+		type: sequelize.QueryTypes.SELECT
+	})
+	.then(function (rows) {
+
+		// convertimos en array ya que viene en object
+		var arr = [];
+		arr = Object.values(rows[0]) ;
+		
+		return ReS(res, {
+			data: arr
 		});
 	})
 	.catch((err) => {
