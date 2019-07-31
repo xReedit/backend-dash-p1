@@ -65,7 +65,7 @@ const getVentas = async function (req, res) {
 	// order by rp.idregistro_pago desc
 	// `;
 
-	let read_query = `CALL procedure_dash_ingresos_egresos(${idorg}, ${idsede})`;
+	let read_query = `CALL procedure_dash_ventas(${idorg}, ${idsede})`;
 
 	emitirRespuesta(read_query, res);
 }
