@@ -57,15 +57,15 @@ const getVentas = async function (req, res) {
 	const idorg = managerFilter.getInfoToken(req,'idorg');
 	const idsede = managerFilter.getInfoToken(req, 'idsede');
 
-	// let read_query = `
-	// SELECT *, rp.total as importe , DATE_FORMAT(CURDATE(), '%d/%m/%Y') as f_actual
-	// from registro_pago as rp		
-	// 	left join cliente as c using(idcliente)
-	// where(rp.idorg = ${idorg} and rp.idsede = ${idsede}) and(rp.estado = 0)
-	// order by rp.idregistro_pago desc
-	// `;
+	let read_query = `
+	SELECT *, rp.total as importe , DATE_FORMAT(CURDATE(), '%d/%m/%Y') as f_actual
+	from registro_pago as rp		
+		left join cliente as c using(idcliente)
+	where(rp.idorg = ${idorg} and rp.idsede = ${idsede}) and(rp.estado = 0)
+	order by rp.idregistro_pago desc
+	`;
 
-	let read_query = `CALL procedure_dash_ventas(${idorg}, ${idsede})`;
+	// let read_query = `CALL procedure_dash_ventas(${idorg}, ${idsede})`;
 
 	emitirRespuesta(read_query, res);
 }
