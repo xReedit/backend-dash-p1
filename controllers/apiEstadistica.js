@@ -57,20 +57,55 @@ const getVentas = async function (req, res) {
 	const idorg = managerFilter.getInfoToken(req,'idorg');
 	const idsede = managerFilter.getInfoToken(req, 'idsede');
 
-	// let read_query = `
-	// SELECT *, rp.total as importe , DATE_FORMAT(CURDATE(), '%d/%m/%Y') as f_actual
-	// from registro_pago as rp		
-	// 	left join cliente as c using(idcliente)
-	// where(rp.idorg = ${idorg} and rp.idsede = ${idsede}) and(rp.estado = 0)
-	// order by rp.idregistro_pago desc
-	// `;
-
 	let read_query = `CALL procedure_dash_ventas(${idorg}, ${idsede})`;
 
 
 	emitirRespuestaSP(read_query, res);
 }
 module.exports.getVentas = getVentas;
+
+
+// timer-real RP=registro de pago
+const getVentasNowRP = async function (req, res) {
+	const idorg = managerFilter.getInfoToken(req,'idorg');
+	const idsede = managerFilter.getInfoToken(req, 'idsede');
+
+	let read_query = `CALL procedure_dash_time_real_registro_pago(${idsede})`;
+
+
+	emitirRespuestaSP(read_query, res);
+}
+module.exports.getVentasNowRP = getVentasNowRP;
+
+// timer-real RP = iecaja
+const getEICajaNowRP = async function (req, res) {
+	const idsede = managerFilter.getInfoToken(req, 'idsede');		
+	
+	let read_query = `select idusuario, tipo as idtipo, if(tipo=1, 'INGRESO', 'SALIDA') as tipo, sum(monto) as importe
+				from ie_caja 
+				where idsede=${idsede} and cierre=0
+				GROUP by idusuario, tipo`;
+	
+	emitirRespuesta(read_query, res);
+
+}
+module.exports.getEICajaNowRP = getEICajaNowRP;
+
+// timer-real RP = Pedidos
+const getPedidoNowRP = async function (req, res) {
+	const idsede = managerFilter.getInfoToken(req, 'idsede');		
+	
+	let read_query = `select p.idtipo_consumo, p.total_r as total, tp.descripcion 
+				from pedido p
+					inner join tipo_consumo as tp on p.idtipo_consumo = tp.idtipo_consumo
+				where p.idsede=${idsede} and cierre=0 and p.estado!=3`;
+	
+	emitirRespuesta(read_query, res);
+
+}
+module.exports.getPedidoNowRP = getPedidoNowRP;
+
+
 
 const getConsumo = async function (req, res) {
 	const idorg = managerFilter.getInfoToken(req,'idorg');

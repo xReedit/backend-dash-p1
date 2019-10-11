@@ -21,9 +21,13 @@ app.use(bodyParser.urlencoded({ extended: true })); // soporte para bodies codif
 
 // var index = require('./models/index');
 
-
+// para estadistica
 var appV2 = require('./routes/v2');
 app.use('/v2',appV2);
+
+// para pwa-app-pedidos
+var appV3 = require('./routes/v3');
+app.use('/v3',appV3);
 
 
 

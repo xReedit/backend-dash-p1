@@ -17,6 +17,8 @@ router.get('/', function (req, res, next) {
 	})
 });
 
+// ESTADISTICA - MODULO GERENCIAL //
+// ESTADISTICA - MODULO GERENCIAL //
 router.post('/login', login.logger);
 router.post('/verificarToken', auth.verificarToken);
 
@@ -25,8 +27,12 @@ router.get('/estadistica/getMetaSede', auth.verificarToken, apiEstadistica.getMe
 router.post('/estadistica/setMetaSede', auth.verificarToken, apiEstadistica.setMetaSede);
 
 router.get('/estadistica/getVentas', auth.verificarToken, apiEstadistica.getVentas);
+router.get('/estadistica/getVentasNowRP', auth.verificarToken, apiEstadistica.getVentasNowRP); // time real registro de pago
+router.get('/estadistica/getEICajaNowRP', auth.verificarToken, apiEstadistica.getEICajaNowRP); // time real ei caja
+router.get('/estadistica/getPedidoNowRP', auth.verificarToken, apiEstadistica.getPedidoNowRP); // time real PEDIDOS
 router.get('/estadistica/getConsumo', auth.verificarToken, apiEstadistica.getConsumo);
 router.get('/estadistica/getFechaNow', apiEstadistica.getFechaNow);
+
 
 // INFO COMPONENTES
 router.get('/estadistica/getSedes', auth.verificarToken, apiEstadistica.getSedes);
