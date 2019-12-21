@@ -154,6 +154,121 @@ const getSedes = async function (req, res) {
 module.exports.getSedes = getSedes;
 
 
+// ventas los ultimos 15 dias
+const getVentasHoy = async function (req, res) {
+	const idorg = managerFilter.getInfoToken(req,'idorg');
+	const idsede = managerFilter.getInfoToken(req, 'idsede');
+
+	let read_query = `
+	SELECT sum(rpd.importe) as importe,tp.idtipo_pago , tp.descripcion, rp.cierre, if(rp.fecha_cierre = '', DATE_FORMAT(now(), '%d/%m/%Y %H:%i:%s'), rp.fecha_cierre) as fecha
+		,if (rp.fecha_cierre = '',1, if (STR_TO_DATE(rp.fecha_cierre, '%d/%m/%Y') = DATE(NOW()), 1, 0 )) hoy 
+	FROM registro_pago AS rp
+		INNER JOIN registro_pago_detalle AS rpd on rp.idregistro_pago = rpd.idregistro_pago	
+		INNER JOIN tipo_pago AS tp on rpd.idtipo_pago = tp.idtipo_pago
+	WHERE (rp.idsede=${idsede}) AND (rp.estado=0 AND rpd.estado=0) 
+		AND (rp.cierre=0 or STR_TO_DATE(rp.fecha_cierre, '%d/%m/%Y') >= DATE(NOW()) - INTERVAL 15 DAY)
+	GROUP BY rp.fecha_cierre, rpd.idtipo_pago
+	order by rp.cierre desc, STR_TO_DATE(rp.fecha_cierre, '%d/%m/%Y')
+	`;
+
+	emitirRespuesta(read_query, res);
+}
+module.exports.getVentasHoy = getVentasHoy;
+
+const getMovCajaHoy = async function (req, res) {
+	const idorg = managerFilter.getInfoToken(req,'idorg');
+	const idsede = managerFilter.getInfoToken(req, 'idsede');
+
+	let read_query = `
+	SELECT sum(monto) as importe, tipo,motivo,fecha_cierre,cierre, if (fecha_cierre = '',1, if (STR_TO_DATE(fecha_cierre, '%d/%m/%Y') = DATE(NOW()), 1, 0 )) hoy 
+	FROM ie_caja 
+	where idsede=${idsede} and if (fecha_cierre = '',1, if (STR_TO_DATE(fecha_cierre, '%d/%m/%Y') = DATE(NOW()), 1, 0 )) = 1
+	GROUP by tipo
+	`;
+
+	emitirRespuesta(read_query, res);
+}
+module.exports.getMovCajaHoy = getMovCajaHoy;
+
+// CON FILTER DATE RANGE
+const getMovCaja = async function (req, res) {
+	// const idorg = managerFilter.getInfoToken(req,'idorg');
+	const idsede = managerFilter.getInfoToken(req, 'idsede');
+	const arr = req.body;	
+
+	let read_query = `
+	SELECT sum(monto) as importe, tipo,motivo,fecha_cierre,cierre, if (fecha_cierre = '',1, if (STR_TO_DATE(fecha_cierre, '%d/%m/%Y') = DATE(NOW()), 1, 0 )) hoy 
+	FROM ie_caja 
+	where idsede=${idsede} AND (STR_TO_DATE(fecha, '%d/%m/%Y') BETWEEN STR_TO_DATE('${arr.desde}', '%d/%m/%Y') and STR_TO_DATE('${arr.hasta}', '%d/%m/%Y') )
+	GROUP by tipo
+	`;
+
+	emitirRespuesta(read_query, res);
+}
+module.exports.getMovCaja = getMovCaja;
+
+
+// items borrados count && sum
+const getItemBorradosHoy = async function (req, res) {
+	const idorg = managerFilter.getInfoToken(req,'idorg');
+	const idsede = managerFilter.getInfoToken(req, 'idsede');
+
+	let read_query = `
+		SELECT count(pb.idpedido) AS cantidad, sum(pb.importe) AS importe
+		FROM pedido_borrados AS pb
+			INNER JOIN pedido AS p ON pb.idpedido=p.idpedido
+			INNER JOIN pedido_detalle AS pd ON pb.idpedido_detalle=pd.idpedido_detalle
+		where (p.idsede=${idsede}) AND if (pb.fecha_cierre = '',1, if (STR_TO_DATE(pb.fecha_cierre, '%d/%m/%Y') = DATE(NOW()), 1, 0 )) = 1
+	`;
+
+	emitirRespuesta(read_query, res);
+}
+module.exports.getItemBorradosHoy = getItemBorradosHoy;
+
+
+// items borrados count && sum + FECHA RANGE
+const getItemBorrados = async function (req, res) {
+	// const idorg = managerFilter.getInfoToken(req,'idorg');
+	const idsede = managerFilter.getInfoToken(req, 'idsede');
+	const arr = req.body;	
+
+	let read_query = `
+		SELECT count(pb.idpedido) AS cantidad, sum(pb.importe) AS importe
+		FROM pedido_borrados AS pb
+			INNER JOIN pedido AS p ON pb.idpedido=p.idpedido
+			INNER JOIN pedido_detalle AS pd ON pb.idpedido_detalle=pd.idpedido_detalle
+		where (p.idsede=${idsede}) AND (STR_TO_DATE(pb.fecha, '%d/%m/%Y') BETWEEN STR_TO_DATE('${arr.desde}', '%d/%m/%Y') and STR_TO_DATE('${arr.hasta}', '%d/%m/%Y') )
+	`;
+
+	emitirRespuesta(read_query, res);
+}
+module.exports.getItemBorrados = getItemBorrados;
+
+
+const getVentaDetalle = async function (req, res) {	
+	const idsede = managerFilter.getInfoToken(req, 'idsede');
+	const arr = req.body;	
+	
+	let read_query = `CALL procedure_dash_venta_detalle(${idsede}, '${arr.desde}', '${arr.hasta}')`;
+	
+	emitirRespuesta(read_query, res);
+
+}
+module.exports.getVentaDetalle = getVentaDetalle;
+
+
+const getConsumoDetalle = async function (req, res) {	
+	const idsede = managerFilter.getInfoToken(req, 'idsede');
+	const arr = req.body;	
+	
+	let read_query = `CALL procedure_dash_consumo_detalle(${idsede}, '${arr.desde}', '${arr.hasta}')`;
+	
+	emitirRespuesta(read_query, res);
+
+}
+module.exports.getConsumoDetalle = getConsumoDetalle;
+
+
 function emitirRespuesta(xquery, res) {
 	console.log(xquery);
 	sequelize.query(xquery, {type: sequelize.QueryTypes.SELECT})

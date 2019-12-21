@@ -30,8 +30,19 @@ router.get('/estadistica/getVentas', auth.verificarToken, apiEstadistica.getVent
 router.get('/estadistica/getVentasNowRP', auth.verificarToken, apiEstadistica.getVentasNowRP); // time real registro de pago
 router.get('/estadistica/getEICajaNowRP', auth.verificarToken, apiEstadistica.getEICajaNowRP); // time real ei caja
 router.get('/estadistica/getPedidoNowRP', auth.verificarToken, apiEstadistica.getPedidoNowRP); // time real PEDIDOS
+router.get('/estadistica/getVentasHoy', auth.verificarToken, apiEstadistica.getVentasHoy); // VENTAS CAJA ULTIMO 15 DIAS
+router.get('/estadistica/getMovCajaHoy', auth.verificarToken, apiEstadistica.getMovCajaHoy); // movimientos caja ie hoy
+router.get('/estadistica/getItemBorradosHoy', auth.verificarToken, apiEstadistica.getItemBorradosHoy); // items borrados hoy
+
+router.post('/estadistica/getMovCaja', auth.verificarToken, apiEstadistica.getMovCaja); // movimientos caja ie con date filter range
+router.post('/estadistica/getItemBorrados', auth.verificarToken, apiEstadistica.getItemBorrados); // items borrados  con date filter range
+router.post('/estadistica/getVentaDetalle', auth.verificarToken, apiEstadistica.getVentaDetalle); // items borrados  con date filter range
+router.post('/estadistica/getConsumoDetalle', auth.verificarToken, apiEstadistica.getConsumoDetalle); // consumo detalles
+
+
 router.get('/estadistica/getConsumo', auth.verificarToken, apiEstadistica.getConsumo);
 router.get('/estadistica/getFechaNow', apiEstadistica.getFechaNow);
+
 
 
 // INFO COMPONENTES

@@ -8,7 +8,6 @@ app.use(cors());
 app.use(bodyParser.json()); // soporte para bodies codificados en jsonsupport
 app.use(bodyParser.urlencoded({ extended: true })); // soporte para bodies codificados
 
-
 //CORS
 // app.use(function(req, res, next) {
 //     res.header("Access-Control-Allow-Origin", "*");
