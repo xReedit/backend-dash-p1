@@ -214,7 +214,7 @@ const getItemBorradosHoy = async function (req, res) {
 	const idsede = managerFilter.getInfoToken(req, 'idsede');
 
 	let read_query = `
-		SELECT count(pb.idpedido) AS cantidad, sum(pb.importe) AS importe
+		SELECT count(pb.idpedido) AS cantidad, COALESCE(sum(pb.importe),0) AS importe
 		FROM pedido_borrados AS pb
 			INNER JOIN pedido AS p ON pb.idpedido=p.idpedido
 			INNER JOIN pedido_detalle AS pd ON pb.idpedido_detalle=pd.idpedido_detalle
